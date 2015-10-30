@@ -24,7 +24,7 @@ namespace ProjectManagement.Model
 
         public DateTime ChangedDate { get; set; }
 
-        public string ChangedBy { get; set; }
+        public string ChangedByName { get; set; }
     }
 
 }

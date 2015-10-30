@@ -18,7 +18,7 @@ namespace ProjectManagement.Model
 
         public DateTime ChangedDate { get; set; }
 
-        public int ChangedBy { get; set; }
+        public string ChangedBy { get; set; }
 
         public Boolean IsActive { get; set; }
     }

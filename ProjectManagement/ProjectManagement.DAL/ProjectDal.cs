@@ -1,4 +1,4 @@
-﻿using ProjectManagement.Model;
+using ProjectManagement.Model;
 using ProjectManagement.SPHelper;
 using System;
 using System.Collections;
@@ -18,6 +18,7 @@ namespace ProjectManagement.DAL
 
             int retValue = -1;
 
+
             //Generated Code for query : dbo.GetAllVendors
             using (SqlDataReader dr = ProjManagementAdmin.GetAllProjects(out retValue)) //Initialize and retrieve code for Datareader goes here
             {
@@ -29,11 +30,12 @@ namespace ProjectManagement.DAL
                     project.ProjectId = Convert.ToInt32(dr["project_id"]);
                     project.ProjectName = dr["project_name"].ToString();
                     project.ProjectCode = dr["project_code"].ToString();
-                    project.ProjectLead = dr["project_lead_name"].ToString();
+                    project.ProjectLeadId = Convert.ToInt32(dr["project_lead_id"]);
+                    project.ProjectLeadName = dr["project_lead_name"].ToString();
                     project.IsActive = Convert.ToBoolean(dr["is_active"]);
                     project.CreatedDate = Convert.ToDateTime(dr["created_date"]);
                     project.ChangedDate = Convert.ToDateTime(dr["changed_date"]);
-                    project.ChangedBy = dr["changed_by"].ToString();
+                    project.ChangedByName = dr["changed_by"].ToString();
                     if(project.IsActive == true)
                     {
                         project.OpenClose = "Close";
@@ -66,11 +68,12 @@ namespace ProjectManagement.DAL
                     project.ProjectId = Convert.ToInt32(dr["project_id"]);
                     project.ProjectName = dr["project_name"].ToString();
                     project.ProjectCode = dr["project_code"].ToString();
-                    project.ProjectLead = dr["project_lead_name"].ToString();
+                    project.ProjectLeadId = Convert.ToInt32(dr["project_lead_id"]);
+                    project.ProjectLeadName = dr["project_lead_name"].ToString();
                     project.IsActive = Convert.ToBoolean(dr["is_active"]);
                     project.CreatedDate = Convert.ToDateTime(dr["created_date"]);
                     project.ChangedDate = Convert.ToDateTime(dr["changed_date"]);
-                    project.ChangedBy = dr["changed_by"].ToString();
+                    project.ChangedByName = dr["changed_by"].ToString();
 
                 }
                 //dr.Close();

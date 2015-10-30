@@ -18,8 +18,8 @@ namespace ProjectManagement.SPHelper
         private const string PROC_GETALLPROJECTS = "dbo.GetAllProjects";
         private const string PROC_GETALLLOCATIONS = "dbo.GetAllLocations";
         private const string PROC_GETALLUSERS = "dbo.GetAllUsers";
+        private const string PROC_GETALLPROJECTLEADS = "dbo.GetAllProjectLeads";
         private const string PROC_GETALLFUNDS = "dbo.GetAllFunds";
-
 
         private const string PROC_ADDNEWPROJECT = "dbo.AddNewProject";
         private const string PROC_GETPROJECTBYID = "dbo.GetProjectById";
@@ -50,13 +50,13 @@ namespace ProjectManagement.SPHelper
         private const string PARAM_LOCATION_ID = "@location_id";
         private const string PARAM_LOCATION_NAME = "@location_name";
         private const string PARAM_LOCATION_CHANGEDBY_ID = "@changed_by";
-        private const string PARAM_LOCATION_CHANGEDBY_NAME = "@changed_by_name";
+        private const string PARAM_LOCATION_CHANGEDBY_NAME = "@changed_by";
         private const string PARAM_LOCATION_CREATEDDATE = "@created_date";
         private const string PARAM_LOCATION_CHANGEDDATE = "@changed_date";
         private const string PARAM_LOCATION_IS_ACTIVE = "@is_active";
 
         private const string PARAM_USER_CHANGEDBY = "@changed_by";
-        private const string PARAM_USER_CREATEDDATE = "@changed_by";
+        private const string PARAM_USER_CREATEDDATE = "@created_by";
         private const string PARAM_USER_CHANGEDDATE = "@changed_date";
         private const string PARAM_USER_NAME = "@user_name";
         private const string PARAM_USER_ID = "@user_id";
@@ -160,7 +160,7 @@ namespace ProjectManagement.SPHelper
                                 new SqlParameter(PARAM_PROJECT_NAME, SqlDbType.NVarChar, 100),
                                 new SqlParameter(PARAM_PROJECT_CODE, SqlDbType.NVarChar, 100),
                                 new SqlParameter(PARAM_PROJECT_LEAD_ID, SqlDbType.Int),
-                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 100)
+                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 50)
 
                             };
 
@@ -173,7 +173,7 @@ namespace ProjectManagement.SPHelper
             sqlParms[1].Value = project.ProjectName;
             sqlParms[2].Value = project.ProjectCode;
             sqlParms[3].Value = project.ProjectLeadId;
-            sqlParms[4].Value = "anjani";
+            sqlParms[4].Value = "vysali";
 
             return sqlParms;
         }
@@ -268,7 +268,7 @@ namespace ProjectManagement.SPHelper
                                 new SqlParameter(PARAM_PROJECT_NAME, SqlDbType.NVarChar, 100),
                                 new SqlParameter(PARAM_PROJECT_CODE, SqlDbType.NVarChar, 100),
                                 new SqlParameter(PARAM_PROJECT_LEAD_ID, SqlDbType.Int),
-                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 100),
+                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.Int),
                                 new SqlParameter(PARAM_RETURN, SqlDbType.Int)
 
                             };
@@ -282,7 +282,8 @@ namespace ProjectManagement.SPHelper
             sqlParms[1].Value = project.ProjectName;
             sqlParms[2].Value = project.ProjectCode;
             sqlParms[3].Value = project.ProjectLeadId;
-            sqlParms[4].Value = "anjani";
+            //sqlParms[4].Value = project.ChangedById;
+            sqlParms[4].Value = 1;
             sqlParms[5].Value = -1;
             return sqlParms;
         }
@@ -379,6 +380,16 @@ namespace ProjectManagement.SPHelper
             SqlDataReader dr = null;
             SqlParameter[] parms = GetAllUsersParams();
             dr = ExecuteReader(PROC_GETALLUSERS, parms, out retValue);
+
+            return dr;
+        }
+
+        public static SqlDataReader GetAllProjectLeads(out int retValue)
+        {
+            retValue = -1;
+            SqlDataReader dr = null;
+            SqlParameter[] parms = GetAllUsersParams();
+            dr = ExecuteReader(PROC_GETALLPROJECTLEADS, parms, out retValue);
 
             return dr;
         }
@@ -567,9 +578,7 @@ namespace ProjectManagement.SPHelper
                                 new SqlParameter(PARAM_RETURN, SqlDbType.Int),
                                 new SqlParameter(PARAM_FUND_DESC, SqlDbType.NVarChar, 100),
                                 new SqlParameter(PARAM_FUND_AMOUNT, SqlDbType.Float),
-                           //    new SqlParameter(PARAM_FUND_RECEIVEDDATE, SqlDbType.DateTime),
-                         //     new SqlParameter(PARAM_FUND_CHANGEDDATE, SqlDbType.DateTime),
-                              new SqlParameter(PARAM_CHANGEDBY, SqlDbType.Int)
+                              new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 50)
 
                             };
 
@@ -581,9 +590,7 @@ namespace ProjectManagement.SPHelper
             sqlParms[0].Value = -1;
             sqlParms[1].Value = fund.FundDesc;
             sqlParms[2].Value = fund.FundAmount;
-         //   sqlParms[3].Value = fund.ReceivedDate;
-         // sqlParms[4].Value = fund.ChangedDate;
-            sqlParms[3].Value = fund.ChangedBy;
+            sqlParms[3].Value = "vysali";
 
             return sqlParms;
         }
@@ -764,7 +771,8 @@ namespace ProjectManagement.SPHelper
             //Assigning values to parameter
             sqlParms[0].Value = -1;
             sqlParms[1].Value = location.LocationName;
-            sqlParms[2].Value = location.ChangedById;
+            // sqlParms[2].Value = location.ChangedById;
+            sqlParms[2].Value = 1;
 
             return sqlParms;
         }
@@ -905,6 +913,109 @@ namespace ProjectManagement.SPHelper
             //Assigning values to parameter
             sqlParms[0].Value = locationId;
             sqlParms[1].Value = -1;
+            return sqlParms;
+        }
+
+        private const string PROC_GETINACTIVEPROJECTSATLOCATION = "dbo.GetInactiveProjectsAtLocation";
+
+        public static SqlDataReader GetInactiveProjectsAtLocation(int LocationId, out int retValue)
+        {
+            retValue = -1;
+            SqlDataReader dr = null;
+            SqlParameter[] parms = GetInactiveProjectsAtLocationParams(LocationId);
+            dr = ExecuteReader(PROC_GETINACTIVEPROJECTSATLOCATION, parms, out retValue);
+
+            return dr;
+        }
+
+        private static SqlParameter[] GetInactiveProjectsAtLocationParams(int locationId)
+        {
+            SqlParameter[] sqlParms = SQLHelper.GetCachedParameters(PROC_GETINACTIVEPROJECTSATLOCATION);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_LOCATION_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int)
+                            };
+
+                sqlParms[1].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_GETINACTIVEPROJECTSATLOCATION, sqlParms);
+            }
+
+            //Assigning values to parameter
+            sqlParms[0].Value = locationId;
+            sqlParms[1].Value = -1;
+            return sqlParms;
+        }
+
+        private const string PROC_SOFTDELETEPROJECTATLOC = "dbo.DeleteProjectLocation";
+        private const string PARAM_PROJECT_LOCATION_ID = "@project_location_id";
+        public static int SoftDeleteProjectAtLocation(int ProjectLocationId, bool isOpen, out int retValue)
+        {
+            retValue = -1;
+            SqlParameter[] parms = GetSoftDeleteProjectAtLocationParams(ProjectLocationId, isOpen);
+            return ExecuteNonQuery(PROC_SOFTDELETEPROJECTATLOC, parms, out retValue);
+        }
+
+        private static SqlParameter[] GetSoftDeleteProjectAtLocationParams(int ProjectLocationId, bool isOpen)
+        {
+            SqlParameter[] sqlParms = new SqlParameter[100];
+            sqlParms = SQLHelper.GetCachedParameters(PROC_SOFTDELETEPROJECTATLOC);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_PROJECT_LOCATION_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_PROJECT_IS_ACTIVE,SqlDbType.Bit),
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int)
+                            };
+
+                sqlParms[2].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_SOFTDELETEPROJECTATLOC, sqlParms);
+            }
+
+            //Assigning values to parameter
+
+            sqlParms[0].Value = ProjectLocationId;
+            sqlParms[1].Value = Convert.ToByte(isOpen);
+            sqlParms[2].Value = -1;
+            return sqlParms;
+        }
+
+        private const string PROC_ADDPROJECTATLOC = "dbo.AddProjectAtLocation";
+
+        public static int AddProjectAtLocation(ProjectLocationInfo ProjLoc, out int retValue)
+        {
+            retValue = -1;
+            SqlParameter[] parms = GetAddProjectAtLocationParams(ProjLoc);
+            return ExecuteNonQuery(PROC_ADDPROJECTATLOC, parms, out retValue);
+        }
+
+        private static SqlParameter[] GetAddProjectAtLocationParams(ProjectLocationInfo ProjLoc)
+        {
+            SqlParameter[] sqlParms = new SqlParameter[100];
+            sqlParms = SQLHelper.GetCachedParameters(PROC_ADDPROJECTATLOC);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int),
+                                new SqlParameter(PARAM_PROJECT_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_LOCATION_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 50)
+
+                            };
+
+                sqlParms[0].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_ADDNEWPROJECT, sqlParms);
+            }
+
+            //Assigning values to parameter
+            sqlParms[0].Value = -1;
+            sqlParms[1].Value = ProjLoc.ProjectId;
+            sqlParms[2].Value = ProjLoc.LocationId;
+            sqlParms[3].Value = "vysali";
             return sqlParms;
         }
         #endregion

@@ -31,7 +31,7 @@ namespace ProjectManagement.DAL
                     fund.FundAmount = Convert.ToSingle(dr["fund_amount"]);
                     fund.ReceivedDate = Convert.ToDateTime(dr["received_date"]);
                     fund.ChangedDate = Convert.ToDateTime(dr["changed_date"]);
-                    fund.ChangedBy = Convert.ToInt32(dr["changed_by"]);
+                    fund.ChangedBy = dr["changed_by"].ToString();
 
                     al.Add(fund);
                 }
@@ -58,7 +58,7 @@ namespace ProjectManagement.DAL
                     fund.FundAmount = Convert.ToSingle(dr["fund_amount"]);
                     fund.ReceivedDate = Convert.ToDateTime(dr["received_date"]);
                     fund.ChangedDate = Convert.ToDateTime(dr["changed_date"]);
-                    fund.ChangedBy = Convert.ToInt32(dr["changed_by"]);
+                    fund.ChangedBy = dr["changed_by"].ToString();
 
                 }
                 //dr.Close();
