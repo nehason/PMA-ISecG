@@ -18,7 +18,7 @@ textarea {
     filter: alpha(opacity=80);*/
     display: none;
     position: absolute;
-    background: #aaaaaa url("../images/ui-bg_flat_0_aaaaaa_40x100.png") 50% 50% repeat-x;
+    background: #aaaaaa url("images/ui-bg_flat_0_aaaaaa_40x100.png") 50% 50% repeat-x;
     opacity: .3;
     filter: Alpha(Opacity=30);
     position: fixed;

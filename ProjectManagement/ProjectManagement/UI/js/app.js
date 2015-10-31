@@ -2,9 +2,8 @@
     'use strict';
 
     angular
-        .module('app', [])
+        .module('app', ['ngRoute', 'ngCookies'])
         .config(config)
-        .run(run)
     .controller('LoginController', LoginController)
     .controller('RegisterController', RegisterController)
     .controller('HomeController', HomeController)
@@ -46,11 +45,11 @@
           }).
           when('/proj-edit/:id', {
               templateUrl: 'UI/Templates/edit-project.html',
-              controller: 'ProjectEditController',
+              controller: 'ProjectEditController'
           }).
         when('/project-details/:id', {
             templateUrl: 'UI/Templates/details-project.html',
-            controller: 'ProjectDetailsController',
+            controller: 'ProjectDetailsController'
 
         }).
           when('/users', {
@@ -75,7 +74,7 @@
 		}).
 		when('/location-details/:id', {
 		    templateUrl: 'UI/Templates/details-location.html',
-		    controller: 'LocationDetailsController',
+		    controller: 'LocationDetailsController'
 		}).
         when('/location-add', {
             templateUrl: 'UI/Templates/add-new-location.html',
@@ -95,11 +94,11 @@
           }).
           when('/fund-edit/:id', {
               templateUrl: 'UI/Templates/edit-funds.html',
-              controller: 'FundEditController',
+              controller: 'FundEditController'
           }).
         when('/fund-details/:id', {
             templateUrl: 'UI/Templates/details-fund.html',
-            controller: 'FundDetailsController',
+            controller: 'FundDetailsController'
         }).
           when('/beneficiaries', {
               templateUrl: 'UI/Templates/beneficiaries.html',
@@ -111,11 +110,11 @@
           }).
           when('/beneficiary-edit/:id', {
               templateUrl: 'UI/Templates/edit-beneficiary.html',
-              controller: 'BeneficiaryEditController',
+              controller: 'BeneficiaryEditController'
           }).
         when('/beneficiary-details/:id', {
             templateUrl: 'UI/Templates/details-beneficiary.html',
-            controller: 'BeneficiaryDetailsController',
+            controller: 'BeneficiaryDetailsController'
         }).
 		when('/projects-report', {
 		    templateUrl: 'UI/Templates/projects-reports.html',
@@ -136,33 +135,15 @@
                             controllerAs: 'vm'
                         })
         .when('/home', {
-            templateUrl: 'layout.html',
+            templateUrl: 'UI/Templates/layout.html',
             controller: 'HomeController',
             controllerAs: 'vm'
         })
           .otherwise({ redirectTo: '/login' });
     }
 
-    run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
-    function run($rootScope, $location, $cookieStore, $http) {
-        // keep user logged in after page refresh
-        $rootScope.globals = $cookieStore.get('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
-        }
-
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
-            var loggedIn = $rootScope.globals.currentUser;
-            if (restrictedPage && !loggedIn) {
-                $location.path('/login');
-            }
-        });
-    }
-
-    LoginController.$inject = ['$location', '$rootScope', '$http'];
-    function LoginController($location, $rootScope, $http) {
+    LoginController.$inject = ['$location', '$rootScope', '$http','$scope'];
+    function LoginController($location, $rootScope, $http, $scope) {
         var vm = this;
         vm.login = login;
         // vm.user = $rootScope.globals.currentUser.username;
@@ -219,8 +200,6 @@
         var vm = this;
     }
 
-
-
     ProjectController.$inject = ['$scope', '$http', '$filter', '$location'];
     function ProjectController($scope, $http, $filter, $location) {
 
@@ -228,7 +207,7 @@
 		success(function (response, status, headers, config) {
 		    $scope.projects = response;
 		}).error(function (data, status, headers, config) {
-		    alert('error');
+		    bootbox.alert('error');
 		});
     };
 
@@ -255,9 +234,9 @@
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
                     if (req.isActive) {
-                        alert("Project successfully Closed. However, you can still reactivate it.");
+                        bootbox.alert("Project successfully Closed. However, you can still reactivate it.");
                     } else {
-                        alert("Project re-opened");
+                        bootbox.alert("Project re-opened");
                     }
                     req.isActive = false;
                     window.location.reload();
@@ -266,7 +245,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -301,7 +280,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("Project successfully deleted. However, you can still reactivate it.");
+                    bootbox.alert("Project successfully deleted. However, you can still reactivate it.");
                     project.isActive = false;
                     $location.path('/projects');
                     //$scope.reqToAddData = {};
@@ -309,7 +288,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -417,7 +396,7 @@
         $http.get('api/user/FetchProjectLeads/0').success(function (result, status, headers) {
             $scope.projectLeads = angular.copy(result);
         }).error(function (result, status, header) {
-            alert("unable to fetch projectLeads");
+            bootbox.alert("unable to fetch projectLeads");
         });
         $scope.isBusy = false;
         $scope.addProject = function () {
@@ -427,13 +406,13 @@
                 url: 'api/project',
                 data: $scope.projectToAddData
             }).success(function (result, status, headers) {
-                alert("Project successfully added");
+                bootbox.alert("Project successfully added");
                 $scope.projectToAddData = {};
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
 
@@ -446,7 +425,7 @@
         $http.get('api/user/FetchProjectLeads/0').success(function (result, status, headers) {
             $scope.projectLeads = angular.copy(result);
         }).error(function (result, status, header) {
-            alert("unable to fetch projectLeads");
+            bootbox.alert("unable to fetch projectLeads");
         });
 
         $scope.detailsId = $routeParams.id;
@@ -459,7 +438,7 @@
         $http.get($scope.getQueryForDetails).success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.projectToEditData = angular.copy(result);
             $scope.backupProjectToEdit = angular.copy(result);
 
@@ -486,14 +465,14 @@
                 data: $scope.projectToEditData
             }).success(function (result, status, headers) {
                 $scope.isBusy = false;
-                alert("Project information successfully edited");
+                bootbox.alert("Project information successfully edited");
                 $location.path('/projects');
 
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
     }
@@ -512,7 +491,7 @@
         $http.get($scope.getQueryForDetails).success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.projectDetailsData = angular.copy(result);
 
         }).error(function () {
@@ -527,7 +506,7 @@
     function UserIndexController($scope, $http, $filter, $location) {
 
         $scope.OpenClose = function (req) {
-            //alert('hit');
+            //bootbox.alert('hit');
             var x;
             var r = confirm("Are you sure you want to Close this project?");
             if (r == true) {
@@ -543,7 +522,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("User successfully Closed. However, you can still reactivate the user.");
+                    bootbox.alert("User successfully Closed. However, you can still reactivate the user.");
                     req.isActive = false;
                     window.location.reload();
                     //$scope.reqToAddData = {};
@@ -551,7 +530,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -588,7 +567,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("User successfully deleted. However, you can still reactivate the user.");
+                    bootbox.alert("User successfully deleted. However, you can still reactivate the user.");
                     user.isActive = false;
                     $location.path('/users');
                     //$scope.reqToAddData = {};
@@ -596,7 +575,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -633,7 +612,7 @@
         $http.get('api/user').success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.isBusy = false;
             $scope.data = angular.copy(result);
             $scope.filteredItems = angular.copy(result);
@@ -651,7 +630,7 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //alert("this is an error");
+            //bootbox.alert("this is an error");
             $location.path('/home');
 
         });
@@ -708,13 +687,13 @@
                 url: 'api/user',
                 data: $scope.userToAddData
             }).success(function (result, status, headers) {
-                alert("User successfully added");
+                bootbox.alert("User successfully added");
                 $scope.userToAddData = {};
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
 
@@ -734,7 +713,7 @@
         $http.get($scope.getQueryForDetails).success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.userToEditData = angular.copy(result);
             $scope.backupUserToEdit = angular.copy(result);
 
@@ -758,14 +737,14 @@
                 data: $scope.userToEditData
             }).success(function (result, status, headers) {
                 $scope.isBusy = false;
-                alert("User information successfully edited");
+                bootbox.alert("User information successfully edited");
                 $location.path('/users');
 
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
     }
@@ -784,7 +763,7 @@
         $http.get($scope.getQueryForDetails).success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.userDetailsData = angular.copy(result);
 
         }).error(function () {
@@ -802,14 +781,14 @@
              $scope.locations = response;
          }).
          error(function (data, status, headers, config) {
-             alert('error');
+             bootbox.alert('error');
          });
     }
 
     LocationIndexController.$inject = ['$scope', '$http', '$filter', '$location', '$routeParams'];
     function LocationIndexController($scope, $http, $filter, $location) {
 
-        alert("hit locationIndex Controller!");
+        bootbox.alert("hit locationIndex Controller!");
         $scope.isBusy = true;
         $scope.reverse = false;
         $scope.groupedItems = [];
@@ -835,7 +814,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("Location successfully deleted. However, you can still reactivate it.");
+                    bootbox.alert("Location successfully deleted. However, you can still reactivate it.");
                     location.isActive = false;
                     $location.path('/locations');
                     //$scope.reqToAddData = {};
@@ -843,7 +822,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -880,7 +859,7 @@
         $http.get('api/location').success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.isBusy = false;
             $scope.data = angular.copy(result);
             $scope.filteredItems = angular.copy(result);
@@ -898,7 +877,7 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //alert("this is an error");
+            //bootbox.alert("this is an error");
             $location.path('/home');
 
         });
@@ -1078,12 +1057,12 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
             else {
-                alert("some error !");
+                bootbox.alert("some error !");
             }
 
         }
@@ -1099,11 +1078,11 @@
                 url: 'api/location',
                 data: $scope.locationToAddData
             }).success(function (result, status, headers) {
-                alert("Location successfully added");
+                bootbox.alert("Location successfully added");
                 $scope.locationToAddData = {};
             }).error(function (result, status, headers) {
                 $scope.isBusy = false;
-                alert("error");
+                bootbox.alert("error");
             });
         }
     }
@@ -1116,7 +1095,7 @@
         $http.get('api/location').success(function (result, status, headers) {
             $scope.Locations = angular.copy(result);
         }).error(function (result, status, header) {
-            alert("unable to fetch locations");
+            bootbox.alert("unable to fetch locations");
         });
 
         $scope.fetchProjects = function (LocationId) {
@@ -1124,7 +1103,7 @@
             $http.get('api/projatloc/fetchinactiveprojectsatlocation/' + LocationId).success(function (result, status, headers) {
                 $scope.Projects = angular.copy(result);
             }).error(function (result, status, header) {
-                alert("unable to fetch Inactive projects");
+                bootbox.alert("unable to fetch Inactive projects");
             });
         }
 
@@ -1135,13 +1114,13 @@
                 url: 'api/projatloc',
                 data: $scope.ToAddData
             }).success(function (result, status, headers) {
-                alert("Project successfully added for Location");
+                bootbox.alert("Project successfully added for Location");
                 $scope.projectToAddData = {};
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
     }
@@ -1164,7 +1143,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("Transaction successfully Deleted.");
+                    bootbox.alert("Transaction successfully Deleted.");
                     req.isActive = false;
                     window.location.reload();
                     //$scope.reqToAddData = {};
@@ -1172,7 +1151,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -1209,7 +1188,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("Transaction successfully deleted.");
+                    bootbox.alert("Transaction successfully deleted.");
                     fund.isActive = false;
                     $location.path('/funds');
                     window.location.reload();
@@ -1218,7 +1197,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -1270,7 +1249,7 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //alert("this is an error");
+            //bootbox.alert("this is an error");
             $location.path('/home');
 
         });
@@ -1327,13 +1306,13 @@
                 url: 'api/fund',
                 data: $scope.fundToAddFund
             }).success(function (result, status, headers) {
-                alert("Transaction successfully added");
+                bootbox.alert("Transaction successfully added");
                 $scope.fundToAddFund = {};
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
 
@@ -1373,14 +1352,14 @@
                 data: $scope.fundToEditFund
             }).success(function (result, status, headers) {
                 $scope.isBusy = false;
-                alert("Fund information successfully edited");
+                bootbox.alert("Fund information successfully edited");
                 $location.path('/funds');
 
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
     }
@@ -1409,7 +1388,7 @@
 
 
         $scope.OpenClose = function (req) {
-            //alert('hit');
+            //bootbox.alert('hit');
             var x;
             var r = confirm("Are you sure you want to remove  this beneficiary?");
             if (r == true) {
@@ -1425,7 +1404,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("Beneficiary successfully removed. However, you can still reactivate the beneficiary.");
+                    bootbox.alert("Beneficiary successfully removed. However, you can still reactivate the beneficiary.");
                     req.isActive = false;
                     window.location.reload();
                     //$scope.reqToAddData = {};
@@ -1433,7 +1412,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -1472,7 +1451,7 @@
 
                 }).success(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("Beneficiary successfully removed. However, you can still reactivate the beneficiary.");
+                    bootbox.alert("Beneficiary successfully removed. However, you can still reactivate the beneficiary.");
                     user.isActive = false;
                     $location.path('/beneficiaries');
                     //$scope.reqToAddData = {};
@@ -1480,7 +1459,7 @@
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
 
             }
@@ -1517,7 +1496,7 @@
         $http.get('api/beneficiary').success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.isBusy = false;
             $scope.data = angular.copy(result);
             $scope.filteredItems = angular.copy(result);
@@ -1535,7 +1514,7 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //alert("this is an error");
+            //bootbox.alert("this is an error");
             $location.path('/home');
 
         });
@@ -1588,16 +1567,16 @@
         $http.get('api/location').success(function (result, status, headers) {
             $scope.Locations = angular.copy(result);
         }).error(function (result, status, header) {
-            alert("unable to fetch locations");
+            bootbox.alert("unable to fetch locations");
         });
 
         $scope.fetchProjects = function (LocationId) {
-            alert(LocationId);
+            bootbox.alert(LocationId);
             $http.get('api/projatloc/FetchActiveProjectsAtLocation/' + LocationId).success(function (result, status, headers) {
                 $scope.Projects = angular.copy(result);
-                alert(Projects);
+                //bootbox.alert(Projects);
             }).error(function (result, status, header) {
-                alert("unable to fetch projects");
+                bootbox.alert("unable to fetch projects");
             });
 
         }
@@ -1609,13 +1588,13 @@
                 url: 'api/beneficiary',
                 data: $scope.beneficiaryToAddData
             }).success(function (result, status, headers) {
-                alert("Beneficiary successfully added");
+                bootbox.alert("Beneficiary successfully added");
                 $scope.beneficiaryToAddData = {};
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
 
@@ -1625,16 +1604,16 @@
         $scope.detailsId = $routeParams.id;
         $scope.detailsId = $scope.detailsId.replace(':', ''); //FIX ERROR 
         $scope.getQueryForDetails = 'api/BeneficiaryAtProjectlocation?id=' + $scope.detailsId;
-        alert($scope.getQueryForDetails);
+        bootbox.alert($scope.getQueryForDetails);
 
         $scope.beneficiaryToEditData = {};
 
         $http.get($scope.getQueryForDetails).success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.beneficiaryToEditData = angular.copy(result);
-            alert($scope.beneficiaryToEditData[0].BeneficiaryName);
+            bootbox.alert($scope.beneficiaryToEditData[0].BeneficiaryName);
             $scope.backupBeneficiaryToEdit = angular.copy(result);
 
         }).error(function () {
@@ -1655,14 +1634,14 @@
                 data: $scope.beneficiaryToEditData
             }).success(function (result, status, headers) {
                 $scope.isBusy = false;
-                alert("Beneficiary information successfully edited");
+                bootbox.alert("Beneficiary information successfully edited");
                 $location.path('/beneficiaries');
 
 
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
-                    alert("error");
+                    bootbox.alert("error");
                 });
         }
     }
@@ -1681,10 +1660,10 @@
         $http.get($scope.getQueryForDetails).success(function (result, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            alert("success");
-            alert(JSON.stringify(result));
+            bootbox.alert("success");
+            bootbox.alert(JSON.stringify(result));
             $scope.beneficiaryDetailsData = angular.copy(result);
-            alert(JSON.stringify($scope.beneficiaryDetailsData));
+            bootbox.alert(JSON.stringify($scope.beneficiaryDetailsData));
         }).error(function () {
 
         });
@@ -1696,7 +1675,7 @@
         $http.get('api/projectreports').success(function (response, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.chartSeries = response;
 
 
@@ -1740,7 +1719,7 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //alert("this is an error");
+            //bootbox.alert("this is an error");
             $location.path('/home');
 
         });
@@ -1752,7 +1731,7 @@
         $http.get('api/ProjectsFundsAtLocationReport').success(function (response, status, headers) {
             // this callback will be called asynchronously
             // when the response is available
-            //alert("success");
+            //bootbox.alert("success");
             $scope.chartSeries = response;
             $scope.flag = true;
 
@@ -1760,7 +1739,7 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //alert("this is an error");
+            //bootbox.alert("this is an error");
             $location.path('/home');
 
         });
