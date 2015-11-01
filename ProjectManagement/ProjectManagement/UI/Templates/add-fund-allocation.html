@@ -1,0 +1,31 @@
+﻿<div class="col-md-6 col-md-offset-3">
+    <h2>Allocate Funds</h2>
+    <form name="form" ng-submit="AllocateFund(ToAddData)" role="form">
+        <div class="form-group" ng-class="{ 'has-error': form.Fund.$dirty && form.Fund.$error.required }">
+            <label>Select Source Fund</label>
+            <select name='Fund' ng-hide='Fund' ng-model="ToAddData.FundId" class="form-control" required ng-change="fetchBalance(ToAddData.FundId)" ng-options="item.FundId as item.FundDesc for item in Funds">                
+                <option value="" ng-selected="true">---Select Fund---</option> 
+            </select>
+            <span>Available Amount : {{AvailableAmount}}</span>
+            <span style="color:red" ng-show="form.Fund.$dirty && form.Fund.$error.required" class="help-block">Please select a fund source</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': form.Beneficiary.$dirty && form.Beneficiary.$error.required }">
+            <label>Select Beneficiary</label>
+            <select name="Beneficiary" ng-model="ToAddData.BeneficiaryId" class="form-control" required ng-options='item.BeneficiaryId as (item.BeneficiaryName+"-"+item.ProjectName+"-"+item.LocationName) for item in Beneficiaries'>
+                <option value="" ng-selected="true">---Select Beneficiary---</option>
+            </select>
+            <span style="color:red" ng-show="form.Beneficiary.$dirty && form.Beneficiary.$error.required" class="help-block">Please select a beneficiary</span>            
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': form.Amount.$dirty && form.Amount.$error.required }">
+            <label>Amount to Allocate</label>
+            <input type="number" name="Amount" id="Amount" class="form-control" ng-model="ToAddData.Amount" required min="1" max="{{AvailableAmount}}" />
+            <span style="color:red" ng-show="form.Amount.$dirty && form.Amount.$error.required" class="help-block">Amount is required</span>
+            <span style="color:red" ng-show="form.Amount.$error.min || form.Amount.$error.max">Amount must be less than {{AvailableAmount}}</span>
+</div>
+        <div class="form-actions">
+            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Allocate</button>
+            <a href="#/fund-allocation" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
+</div>
+

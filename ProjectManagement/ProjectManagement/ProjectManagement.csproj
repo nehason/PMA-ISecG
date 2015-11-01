@@ -176,6 +176,7 @@
     <Compile Include="API\AuthenticateController.cs" />
     <Compile Include="API\BeneficiaryAtProjectLocationController.cs" />
     <Compile Include="API\BeneficiaryController.cs" />
+    <Compile Include="API\FundAllocationController.cs" />
     <Compile Include="API\FundController.cs" />
     <Compile Include="API\ProjAtLocController.cs" />
     <Compile Include="API\ProjectController.cs" />
@@ -260,6 +261,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="index.html" />
+    <Content Include="UI\fund-allocation.html" />
+    <Content Include="UI\Templates\add-fund-allocation.html" />
+    <Content Include="UI\Templates\fund-allocation.html" />
     <Content Include="UI\Templates\layout.html" />
     <Content Include="Scripts\angular-animate.js" />
     <Content Include="Scripts\angular-animate.min.js" />
@@ -1108,7 +1112,9 @@
     <Content Include="UI\Templates\projects.html" />
     <Content Include="UI\Templates\register.view.html" />
     <Content Include="UI\Templates\users.html" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

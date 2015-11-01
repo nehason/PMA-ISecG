@@ -768,7 +768,7 @@ namespace ProjectManagement.SPHelper
                             {
                                 new SqlParameter(PARAM_RETURN, SqlDbType.Int),
                                 new SqlParameter(PARAM_LOCATION_NAME, SqlDbType.NVarChar, 100),
-                                new SqlParameter(PARAM_LOCATION_CHANGEDBY_ID, SqlDbType.Int, 100)
+                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 100)
                             };
 
                 sqlParms[0].Direction = ParameterDirection.ReturnValue;
@@ -778,8 +778,7 @@ namespace ProjectManagement.SPHelper
             //Assigning values to parameter
             sqlParms[0].Value = -1;
             sqlParms[1].Value = location.LocationName;
-            // sqlParms[2].Value = location.ChangedById;
-            sqlParms[2].Value = 1;
+            sqlParms[2].Value = "vysali";
 
             return sqlParms;
         }
@@ -1278,6 +1277,175 @@ namespace ProjectManagement.SPHelper
             //Assigning values to parameter
 
             sqlParms[0].Value = -1;
+            return sqlParms;
+        }
+        #endregion
+        #region FundAllocation
+        private const string PROC_GETALLOCATEDFUNDS = "dbo.GetAllocatedFunds";
+        private const string PROC_DELETEALLOCATEDFUND = "dbo.DeleteAllocatedFund";
+        private const string PROC_GETBALANCEFORFUND = "dbo.GetAvailableAmountForFund";
+        private const string PROC_GETBENEFORFA = "dbo.GetBeneficiaryForFA";
+        private const string PROC_ADDNEWFA = "dbo.AllocateFund";
+        private const string PARAM_ALLOCATION_ID = "@allocation_id";
+        private const string PARAM_ALLOCATEDBY = "@allocated_by";
+        private const string PARAM_ALLOCATED_AMOUNT = "@allocated_amount";
+
+        public static SqlDataReader GetAllocatedFunds(out int retValue)
+        {
+            retValue = -1;
+            SqlDataReader dr = null;
+            SqlParameter[] parms = GetAllocatedFundsParams();
+            dr = ExecuteReader(PROC_GETALLOCATEDFUNDS, parms, out retValue);
+
+            return dr;
+        }
+
+        private static SqlParameter[] GetAllocatedFundsParams()
+        {
+            SqlParameter[] sqlParms = SQLHelper.GetCachedParameters(PROC_GETALLOCATEDFUNDS);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int)
+
+                            };
+
+                sqlParms[0].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_GETALLOCATEDFUNDS, sqlParms);
+            }
+
+            //Assigning values to parameter
+            sqlParms[0].Value = -1;
+            return sqlParms;
+        }
+
+        public static SqlDataReader GetBeneForFA(out int retValue)
+        {
+            retValue = -1;
+            SqlDataReader dr = null;
+            SqlParameter[] parms = GetBeneForFAParams();
+            dr = ExecuteReader(PROC_GETBENEFORFA, parms, out retValue);
+
+            return dr;
+        }
+
+        private static SqlParameter[] GetBeneForFAParams()
+        {
+            SqlParameter[] sqlParms = SQLHelper.GetCachedParameters(PROC_GETBENEFORFA);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int)
+
+                            };
+
+                sqlParms[0].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_GETBENEFORFA, sqlParms);
+            }
+
+            //Assigning values to parameter
+            sqlParms[0].Value = -1;
+            return sqlParms;
+        }
+
+        public static int GetBalanceForFund(int FundId, out int retValue)
+        {
+            retValue = -1;
+            SqlParameter[] parms = GetBalanceForFundParams(FundId);
+            return ExecuteNonQuery(PROC_GETBALANCEFORFUND, parms, out retValue);
+        }
+
+        private static SqlParameter[] GetBalanceForFundParams(int FundId)
+        {
+            SqlParameter[] sqlParms = new SqlParameter[100];
+            sqlParms = SQLHelper.GetCachedParameters(PROC_GETBALANCEFORFUND);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_FUND_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int)
+                            };
+
+                sqlParms[1].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_GETBALANCEFORFUND, sqlParms);
+            }
+
+            //Assigning values to parameter
+
+            sqlParms[0].Value = FundId;
+            sqlParms[1].Value = -1;
+            return sqlParms;
+        }
+
+
+        public static int DeleteAllocatedFund(int FAId, out int retValue)
+        {
+            retValue = -1;
+            SqlParameter[] parms = GetDeleteAllocatedFundParams(FAId);
+            return ExecuteNonQuery(PROC_DELETEALLOCATEDFUND, parms, out retValue);
+        }
+
+        private static SqlParameter[] GetDeleteAllocatedFundParams(int FAId)
+        {
+            SqlParameter[] sqlParms = new SqlParameter[100];
+            sqlParms = SQLHelper.GetCachedParameters(PROC_DELETEALLOCATEDFUND);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_ALLOCATION_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int)
+                            };
+
+                sqlParms[1].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_DELETEALLOCATEDFUND, sqlParms);
+            }
+
+            //Assigning values to parameter
+
+            sqlParms[0].Value = FAId;
+            sqlParms[1].Value = -1;
+            return sqlParms;
+        }
+
+        public static int AddNewFA(FundAllocationInfo FA, out int retValue)
+        {
+            retValue = -1;
+            SqlParameter[] parms = GetAddNewFAParams(FA);
+            return ExecuteNonQuery(PROC_ADDNEWFA, parms, out retValue);
+        }
+
+        private static SqlParameter[] GetAddNewFAParams(FundAllocationInfo FA)
+        {
+            SqlParameter[] sqlParms = new SqlParameter[100];
+            sqlParms = SQLHelper.GetCachedParameters(PROC_ADDNEWFA);
+            if (sqlParms == null)
+            {
+                sqlParms = new SqlParameter[]
+                            {
+                                new SqlParameter(PARAM_RETURN, SqlDbType.Int),
+                                new SqlParameter(PARAM_FUND_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_BENEFICIARY_ID, SqlDbType.Int),
+                                new SqlParameter(PARAM_CHANGEDBY, SqlDbType.NVarChar, 100),
+                                new SqlParameter(PARAM_ALLOCATEDBY, SqlDbType.NVarChar, 100),
+                                new SqlParameter(PARAM_ALLOCATED_AMOUNT, SqlDbType.Float)
+                            };
+
+                sqlParms[0].Direction = ParameterDirection.ReturnValue;
+                SQLHelper.CacheParameters(PROC_ADDNEWFA, sqlParms);
+            }
+
+            //Assigning values to parameter
+            sqlParms[0].Value = -1;
+            sqlParms[1].Value = FA.FundId;
+            sqlParms[2].Value = FA.BeneficiaryId;
+            sqlParms[3].Value = "vysali";
+            sqlParms[4].Value = "vysali";
+            sqlParms[5].Value = FA.Amount;
+
             return sqlParms;
         }
         #endregion

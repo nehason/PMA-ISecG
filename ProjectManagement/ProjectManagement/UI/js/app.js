@@ -30,6 +30,8 @@
 	.controller('BeneficiaryDetailsController', BeneficiaryDetailsController)
 	.controller('ProjectsReportController', ProjectsReportController)
 	.controller('ProjectsLocationFundsReportController', ProjectsLocationFundsReportController)
+    .controller('FundAllocationIndexController', FundAllocationIndexController)
+    .controller('FundAllocationAddController', FundAllocationAddController)
     .filter('propsFilter', propsFilter);
 
     config.$inject = ['$routeProvider'];
@@ -123,6 +125,14 @@
         when('/projects-location-funds-report', {
             templateUrl: 'UI/Templates/projects-locations-reports.html',
             controller: 'ProjectsLocationFundsReportController'
+        }).
+        when('/fund-allocation', {
+            templateUrl: 'UI/Templates/fund-allocation.html',
+            controller: 'FundAllocationIndexController'
+        }).
+        when('/add-fund-allocation', {
+            templateUrl: 'UI/Templates/add-fund-allocation.html',
+            controller: 'FundAllocationAddController'
         }).
         when('/login', {
             controller: 'LoginController',
@@ -788,7 +798,6 @@
     LocationIndexController.$inject = ['$scope', '$http', '$filter', '$location', '$routeParams'];
     function LocationIndexController($scope, $http, $filter, $location) {
 
-        bootbox.alert("hit locationIndex Controller!");
         $scope.isBusy = true;
         $scope.reverse = false;
         $scope.groupedItems = [];
@@ -857,9 +866,6 @@
 
 
         $http.get('api/location').success(function (result, status, headers) {
-            // this callback will be called asynchronously
-            // when the response is available
-            //bootbox.alert("success");
             $scope.isBusy = false;
             $scope.data = angular.copy(result);
             $scope.filteredItems = angular.copy(result);
@@ -877,8 +883,8 @@
 
         }).error(function () {
             $scope.isBusy = false;
-            //bootbox.alert("this is an error");
-            $location.path('/home');
+            alert("error");
+            //$location.path('/home');
 
         });
 
@@ -939,6 +945,12 @@
 
         $scope.getQueryForProjectDetails = 'api/location/FetchProjectsAtLocation/' + $scope.detailsId;
         $scope.ProjectLocationDetailsData = {};
+
+          $scope.back = function () {
+            $location.url('/locations');
+        };
+
+
 
         //Pagination Code 
 
@@ -1729,9 +1741,6 @@
     function ProjectsLocationFundsReportController($scope, $http, $filter, $location) {
 
         $http.get('api/ProjectsFundsAtLocationReport').success(function (response, status, headers) {
-            // this callback will be called asynchronously
-            // when the response is available
-            //bootbox.alert("success");
             $scope.chartSeries = response;
             $scope.flag = true;
 
@@ -1819,6 +1828,173 @@
                 $scope.flag = true;
             }
         }
+    }
+
+    FundAllocationAddController.$inject = ['$scope', '$http', '$filter', '$location', '$routeParams'];
+    function FundAllocationAddController($scope, $http, $filter, $location) {
+        $http.get('api/fund').success(function (result, status, headers) {
+            $scope.Funds = angular.copy(result);
+        }).error(function (result, status, header) {
+            bootbox.alert("unable to fetch fund information. Please try again after sometime");
+        });
+        $http.get('api/fundallocation/FetchBeneficiaryForFA/0').success(function (result, status, headers) {
+            $scope.Beneficiaries = angular.copy(result);
+        }).error(function (result, status, header) {
+            bootbox.alert("unable to fetch Beneficairy information. Please try again after sometime");
+        });
+        
+            $scope.fetchBalance = function (LocationId) {
+                if (!LocationId) {
+                    $scope.AvailableAmount = 0;
+                } else {
+                    $http.get('api/fundallocation/getbalanceforfund/' + LocationId).success(function (result, status, headers) {
+                        $scope.AvailableAmount = angular.copy(result);
+                    }).error(function (result, status, header) {
+                        bootbox.alert("unable to fetch fund information. Please try again after sometime");
+                    });
+                }
+            }
+            $scope.AllocateFund = function (FundAllocationInfo) {
+                $scope.isBusy = true;
+                $http({
+                    method: 'POST',
+                    url: 'api/fundallocation',
+                    data: FundAllocationInfo
+                }).success(function (result, status, headers) {
+                    bootbox.alert("Fund Was allocated successfully");
+                    $location.path('/fund-allocation');
+                }).error(function (result, status, headers) {
+                    $scope.isBusy = false;
+                    bootbox.alert("Unable to Allocated Fund.Please try again after sometime");
+                });
+            }
+
+    }
+    FundAllocationIndexController.$inject = ['$scope', '$http', '$filter', '$location', '$routeParams'];
+    function FundAllocationIndexController($scope, $http, $filter, $location) {
+        $scope.isBusy = true;
+        $scope.reverse = false;
+        $scope.groupedItems = [];
+        $scope.itemsPerPage = 3;
+        $scope.currentPage = 0;
+
+        /*$scope.Edit = function (location) {
+            $location.path('/fa-edit/:' + location.LocationId);
+
+        }*/
+        $scope.Delete = function (allocation) {
+            var x;
+            var r = confirm("Are you sure you want to delete this Location? This Operation cannot be undone.");
+            if (r == true) {
+                $scope.urlForDelete = 'api/fundallocation?id=' + allocation.AllocationId;
+
+                $http({
+                    method: 'DELETE',
+                    url: $scope.urlForDelete,
+
+                }).success(function (result, status, headers) {
+                    $scope.isBusy = false;
+                    bootbox.alert("The Allocated amount has been deleted");
+                    location.isActive = false;
+                    $location.path('/fund-allocation');
+                })
+                .error(function (result, status, headers) {
+                    $scope.isBusy = false;
+                    bootbox.alert("error");
+                });
+
+            }
+            else {
+
+            }
+        }
+        $scope.range = function (start, end) {
+            var ret = [];
+            if (!end) {
+                end = start;
+                start = 0;
+            }
+            for (var i = start; i < end; i++) {
+                ret.push(i);
+            }
+            return ret;
+        };
+        $scope.prevPage = function () {
+            if ($scope.currentPage > 0) {
+                $scope.currentPage--;
+            }
+        };
+        $scope.nextPage = function () {
+            if ($scope.currentPage < $scope.pagedItems.length - 1) {
+                $scope.currentPage++;
+            }
+        };
+        $scope.setPage = function () {
+            $scope.currentPage = this.n;
+        };
+
+
+        $http.get('api/fundallocation').success(function (result, status, headers) {
+            $scope.isBusy = false;
+            $scope.data = angular.copy(result);
+            $scope.filteredItems = angular.copy(result);
+
+            //paging
+            $scope.pagedItems = [];
+
+            for (var i = 0; i < $scope.filteredItems.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                } else {
+                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                }
+            }
+
+        }).error(function () {
+            $scope.isBusy = false;
+            alert("error");
+
+        });
+
+        // calculate page in place
+        $scope.groupToPages = function () {
+            $scope.pagedItems = [];
+
+            for (var i = 0; i < $scope.filteredItems.length; i++) {
+                if (i % $scope.itemsPerPage === 0) {
+                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [$scope.filteredItems[i]];
+                } else {
+                    $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+                }
+            }
+        };
+
+        // init the filtered items
+        $scope.search = function () {
+
+            $scope.filteredItems = $filter('filter')($scope.data, function (item) {
+
+                if (searchMatch(item.FundDesc, $scope.query) || searchMatch(item.BeneficiaryName, $scope.query))
+                    return true;
+
+                return false;
+            });
+            /* take care of the sorting order
+            if ($scope.sortingOrder !== '') {
+                $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sortingOrder, $scope.reverse);
+            }*/
+            $scope.currentPage = 0;
+            // now group by pages
+            $scope.groupToPages();
+        };
+
+        var searchMatch = function (haystack, needle) {
+            if (!needle) {
+                return true;
+            }
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        };
+
     }
 
     function propsFilter() {

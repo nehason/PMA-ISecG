@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AuthenticateDal.cs" />
     <Compile Include="BeneficiaryProjLocDal.cs" />
+    <Compile Include="FundAllocationDal.cs" />
     <Compile Include="FundDal.cs" />
     <Compile Include="LocationDal.cs" />
     <Compile Include="ProjectDal.cs" />

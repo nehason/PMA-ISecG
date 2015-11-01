@@ -46,7 +46,10 @@
     <Compile Include="AccountInfo.cs" />
     <Compile Include="BarGraphSeriesInfo.cs" />
     <Compile Include="BeneficiaryProjLocInfo.cs" />
+    <Compile Include="BeneForFAInfo.cs" />
+    <Compile Include="FundAllocationInfo.cs" />
     <Compile Include="FundInfo.cs" />
+    <Compile Include="FundBalanceInfo.cs" />
     <Compile Include="HighChartsBarGraphInfo.cs" />
     <Compile Include="MyInt.cs" />
     <Compile Include="PieUtility.cs" />
