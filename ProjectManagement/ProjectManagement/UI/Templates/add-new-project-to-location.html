@@ -1,53 +1,25 @@
-﻿<div class="progress progress-warning progress-small progress-stripped active" ng-show="isBusy">
-    <div class="bar" style="width: 100%;"></div>
-</div>
-<br />
-<div class="span12">
-    <h1> Add Project to location </h1>
-</div>
-<div class="span12">
-    <form class="form-horizontal" ng-submit="AddProject()">
+﻿<div class="col-md-6 col-md-offset-3">
+    <h2>Add A project to a location</h2>
+    <form name="form" ng-submit="AddProject()" role="form">
         <div class="control-group">
-            <label class="control-label" for="form-field-1">Location</label>
-            <select ng-model="ToAddData.LocationId" ng-change="fetchProjects(ToAddData.LocationId)">
-                <option 
-                        ng-repeat="item in Locations"
-                        value="{{item.LocationId}}">
-                    {{item.LocationName}}
-                </option>
-            </select>
-            <br/>
-            <label class="control-label" for="form-field-1">Projects</label>
-            <select ng-model="ToAddData.ProjectId">
-                <option 
-                        ng-repeat="item in Projects"
-                        value="{{item.ProjectId}}">
-                    {{item.ProjectName}}
-                </option>
-            </select>
-            <br />
-          
-        
+            <div class="form-group" ng-class="{ 'has-error': form.LocationName.$dirty && form.LocationName.$error.required }">
+                <label>Location name</label>
+                <select name="LocationName" id="LocationName" ng-model="ToAddData.LocationId" class="form-control" required ng-options='item.LocationId as (item.LocationName) for item in Locations' ng-change="fetchProjects(ToAddData.LocationId)">
+                    <option value="" ng-selected="true">---Select Location---</option>
+                </select>
+                <span style="color:red" ng-show="form.LocationName.$dirty && form.LocationName.$error.required" class="help-block">Select A location</span>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error': form.ProjectName.$dirty && form.ProjectName.$error.required }">
+                <label>Project name</label>
+                <select name="ProjectName" id="ProjectName" ng-model="ToAddData.ProjectId" class="form-control" required ng-options='item.ProjectId as (item.ProjectName) for item in Projects'>
+                    <option value="" ng-selected="true">---Select Product---</option>
+                </select>
+                <span style="color:red" ng-show="form.ProjectName.$dirty && form.ProjectName.$error.required" class="help-block">Select A Project</span>
+            </div>
+            <div class="form-actions">
+                <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Add Project</button>
+                <a href="#/home" class="btn btn-link">Cancel</a>
+            </div>
         </div>
-        <div class="hr"></div>
-        <div class="form-actions">
-            <button class="btn btn-info" type="submit">
-                <i class="icon-ok bigger-110"></i>
-                Add Project
-            </button>
-            &nbsp; &nbsp; &nbsp;
-            <button class="btn" type="reset">
-                <i class="icon-undo bigger-110"></i>
-                Reset
-            </button>
-        </div>
-        
     </form>
 </div>
-<br />
-
-
-
-
-
-

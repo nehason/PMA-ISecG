@@ -1090,7 +1090,7 @@
                 data: $scope.locationToAddData
             }).success(function (result, status, headers) {
                 bootbox.alert("Location successfully added");
-                $scope.locationToAddData = {};
+                $location.path("/locations")
             }).error(function (result, status, headers) {
                 $scope.isBusy = false;
                 bootbox.alert("error");
@@ -1126,7 +1126,7 @@
                 data: $scope.ToAddData
             }).success(function (result, status, headers) {
                 bootbox.alert("Project successfully added for Location");
-                $scope.projectToAddData = {};
+                $location.path('/location-details/:'+$scope.ToAddData.LocationId);
 
             })
                 .error(function (result, status, headers) {
