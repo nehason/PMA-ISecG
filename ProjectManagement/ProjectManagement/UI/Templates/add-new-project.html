@@ -1,68 +1,28 @@
-﻿<div class="page-header position-relative">
-    <div class="templatemo-panels">
-        <div class="row">
-
-            <div class="col-md-6 col-sm-6 margin-bottom-30">
-                <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <form class="form-horizontal" ng-submit="addProject()">
-                            <div class="control-group">
-                                <label class="control-label" for="form-field-1">Project Name</label>
-
-                                <div class="controls">
-                                    <input type="text" id="form-field-1" name="Name" ng-model="projectToAddData.ProjectName" />
-
-                                </div>
-                            </div>
-
-                            <div class="control-group">
-                                <label class="control-label" for="form-field-4">Project Code</label>
-
-                                <div class="controls">
-                                    <input type="text" id="form-field-4" name="UserName" ng-model="projectToAddData.ProjectCode" />
-
-                                </div>
-                            </div>
-                            <div>
-                                <select ng-model="projectToAddData.ProjectLeadId">
-                                    <option ng-selected="{{item.ProjectLeadId == projectToAddData.ProjectLeadId}}"
-                                            ng-repeat="item in projectLeads"
-                                            value="{{item.UserId}}">
-                                        {{item.UserName}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="form-actions">
-                                <button class="btn btn-info" type="submit">
-                                    <i class="icon-ok bigger-110"></i>
-                                    Add Project
-                                </button>
-
-
-                                &nbsp; &nbsp; &nbsp;
-                                <button class="btn" type="reset">
-                                    <i class="icon-undo bigger-110"></i>
-                                    Reset
-                                </button>
-                            </div>
-
-
-
-
-                            <div class="hr"></div>
-
-                        </form>
-
-                        <div class="progress progress-warning progress-small progress-stripped active" ng-show="isBusy">
-
-                            <div class="bar" style="width: 100%;"></div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+﻿<div class="col-md-6 col-md-offset-3">
+    <h2>Add New Project</h2>
+    <form name="form" ng-submit="addProject()" role="form">
+        <div class="form-group" ng-class="{ 'has-error': form.ProjectName.$dirty && form.ProjectName.$error.required }">
+            <label>Project name</label>
+            <input type="text" name="ProjectName" id="ProjectName" class="form-control" ng-model="projectToAddData.ProjectName" required />
+            <span style="color:red" ng-show="form.ProjectName.$dirty && form.ProjectName.$error.required" class="help-block">Project Name is required</span>
         </div>
-    </div>
+        <div class="form-group" ng-class="{ 'has-error': form.ProjectCode.$dirty && form.ProjectCode.$error.required }">
+            <label>Project Code</label>
+            <input type="text" name="ProjectCode" id="ProjectCode" class="form-control" ng-model="projectToAddData.ProjectCode" required />
+            <span style="color:red" ng-show="form.ProjectCode.$dirty && form.ProjectCode.$error.required" class="help-block">ProjectCode is required</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': form.ProjectLead.$dirty && form.ProjectLead.$error.required }">
+            <label>Project Lead</label>
+            <select name="ProjectLead" ng-model="projectToAddData.ProjectLeadId" class="form-control" required ng-options='item.UserId as (item.UserName) for item in projectLeads'>
+                <option value="" ng-selected="true">---Select Project Lead---</option>
+            </select>
+            <span style="color:red" ng-show="form.ProjectLead.$dirty && form.ProjectLead.$error.required" class="help-block">Please select a Project Lead</span>
+        </div>
 
+        <div class="form-actions">
+            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Allocate</button>
+            <a href="#/projects" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
 </div>
+

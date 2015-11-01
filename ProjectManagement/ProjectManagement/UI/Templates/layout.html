@@ -7,11 +7,17 @@
                 <span class="btn btn-default">Go</span>
             </form>
         </li>-->
-            <!--<li>
-                <h4>You are logged-in as {{vm.username}} !</h4>
-            </li>-->
+            <!--<li>-->
+                <h4>You are logged-in as {{userinfo.username}} !</h4>
+            <!--</li>-->
             <li class="active"><a href="javascript:;"><i class="fa fa-home"></i>Dashboard</a></li>
-            <li class="active"><a href="#projects"><i class="fa fa-database"></i>Projects<div class="pull-right"></div></a></li>
+            <li class="sub open">
+                <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-database"></i>Projects <div class="pull-right"><span class="caret"></span></div></a>
+                <ul class="templatemo-submenu">
+                    <li><a href="#projects">All Projects</a></li>
+                    <li><a href="#project-add">Add New Project</a></li>
+                </ul>
+            </li>
             <li class="active"><a href="#users"><i class="fa fa-users"></i>Volunteers<div class="pull-right"></div></a></li>
             <li class="active">
                 <a href="#beneficiaries"><i class="fa fa-users"></i>Beneficiaries<div class="pull-right"></div></a>

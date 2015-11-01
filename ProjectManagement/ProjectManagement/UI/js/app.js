@@ -157,7 +157,6 @@
         var vm = this;
         vm.login = login;
         // vm.user = $rootScope.globals.currentUser.username;
-
         function login() {
             ShowLoading();
             $http({
@@ -166,6 +165,7 @@
                 data: vm
             }).success(function (result, status, headers) {
                 HideLoading();
+                console.log(vm);
                 $location.path('/home');
 
             }).error(function (result, status, headers) {
@@ -417,8 +417,7 @@
                 data: $scope.projectToAddData
             }).success(function (result, status, headers) {
                 bootbox.alert("Project successfully added");
-                $scope.projectToAddData = {};
-
+                $location.path("/projects");
             })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
@@ -523,7 +522,7 @@
 
                 req.isOpen = !req.IsActive;
 
-                $scope.urlForDelete = 'api/selectedUser?id=' + req.UserId + '&isOpen=' + req.isOpen;
+                $scope.urlForDelete = 'api/selectedUser?id=' + req.UserId + '&isOpen=' + req;
 
 
                 $http({
@@ -1896,7 +1895,7 @@
                     $scope.isBusy = false;
                     bootbox.alert("The Allocated amount has been deleted");
                     location.isActive = false;
-                    $location.path('/fund-allocation');
+                    window.location.reload();
                 })
                 .error(function (result, status, headers) {
                     $scope.isBusy = false;
