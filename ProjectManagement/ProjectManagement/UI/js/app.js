@@ -165,7 +165,8 @@
                 data: vm
             }).success(function (result, status, headers) {
                 HideLoading();
-                console.log(vm);
+                $rootScope.username = vm.username;
+               
                 $location.path('/home');
 
             }).error(function (result, status, headers) {
@@ -208,6 +209,7 @@
     HomeController.$inject = ['$rootScope'];
     function HomeController($rootScope) {
         var vm = this;
+   
     }
 
     ProjectController.$inject = ['$scope', '$http', '$filter', '$location'];
