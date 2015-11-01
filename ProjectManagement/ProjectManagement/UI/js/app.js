@@ -510,8 +510,7 @@
         };
     }
 
-
-    UserIndexController.$inject = ['$scope', '$http', '$filter', '$location'];
+        UserIndexController.$inject = ['$scope', '$http', '$filter', '$location'];
     function UserIndexController($scope, $http, $filter, $location) {
 
         $scope.OpenClose = function (req) {
@@ -522,7 +521,7 @@
 
                 req.isOpen = !req.IsActive;
 
-                $scope.urlForDelete = 'api/selectedUser?id=' + req.UserId + '&isOpen=' + req;
+                $scope.urlForDelete = 'api/selectedUser?id=' + req.UserId + '&isOpen=' + req.isOpen;
 
 
                 $http({
@@ -568,7 +567,7 @@
             var x;
             var r = confirm("Are you sure you want to delete this User?");
             if (r == true) {
-                $scope.urlForDelete = 'api/SelectedUser?id=' + user.UserId;
+                $scope.urlForDelete = 'api/SelectedUser?id=' + user.UserId + '&isOpen=false'
 
                 $http({
                     method: 'DELETE',
@@ -579,6 +578,8 @@
                     bootbox.alert("User successfully deleted. However, you can still reactivate the user.");
                     user.isActive = false;
                     $location.path('/users');
+                    window.location.reload();
+
                     //$scope.reqToAddData = {};
 
                 })
@@ -705,6 +706,9 @@
                     bootbox.alert("error");
                 });
         }
+        $scope.back = function () {
+            $location.url('/users');
+        };
 
     }
 
@@ -779,9 +783,13 @@
 
 
         });
-
+        $scope.back = function () {
+            $location.url('/users');
+        };
 
     }
+
+
     LocationController.$inject = ['$scope', '$http', '$filter', '$location', '$routeParams'];
     function LocationController($scope, $http, $filter, $location) {
 

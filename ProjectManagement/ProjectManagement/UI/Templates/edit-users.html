@@ -1,7 +1,7 @@
 ﻿
 <div class="page-header position-relative">
     <h1>
-        Edit User
+        Edit Volunteer Details
         <!--<small>
             <i class="icon-double-angle-right"></i>
             overview &amp; stats
@@ -30,7 +30,7 @@
 
             <tr>
                 <td>
-                    User Name
+                    Volunteer Name
                 </td>
                 <td>
                     <input type="UserName" id="form-field-1" name="UserName" ng-model="userToEditData.UserName" required></input>
@@ -39,10 +39,10 @@
 
             <tr>
                 <td>
-                    User Email
+                    Volunteer Email
                 </td>
                 <td>
-                    <input type="UserEmail" id="form-field-2" name="UserEmail" ng-model="userToEditData.UserEmail" required></input>
+                    <input type="UserEmail" id="form-field-2" name="UserEmail" pattern="[a-zA-Z0-9.!#$%&’*+/ =?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*" ng-model="userToEditData.UserEmail" required></input>
                 </td>
             </tr>
             

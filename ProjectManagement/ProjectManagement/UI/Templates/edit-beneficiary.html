@@ -33,7 +33,7 @@
                     Beneficiary Name
                 </td>
                 <td>
-                    <input type="text" id="form-field-1" name="BeneficiaryName" ng-model="beneficiaryToEditData.BeneficiaryName" required>{{beneficiaryToEditData.BeneficiaryName}}</input>
+                    <input type="BeneficiaryName" id="form-field-1" name="BeneficiaryName" ng-model="beneficiaryToEditData.BeneficiaryName" required></input>
                 </td>
             </tr>
 
@@ -42,37 +42,7 @@
                     Beneficiary Address
                 </td>
                 <td>
-                    <input type="text" id="form-field-2" name="BeneficiaryAddress" ng-model="beneficiaryToEditData.BeneficiaryAddress" required></input>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Project Name
-                <td>
-                <td>
-                    <select ng-model="beneficiaryToEditData.ProjectId">
-                        <option ng-selected="{{item.ProjectId == beneficiaryToEditData.ProjectId}}"
-                                ng-repeat="item in projects"
-                                value="{{item.ProjectId}}">
-                            {{item.ProjectName}}
-                        </option>
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Location Name
-                <td>
-                <td>
-                    <select ng-model="beneficiaryToEditData.LocationId">
-                        <option ng-selected="{{item.LocationId == beneficiaryToEditData.LocationId}}"
-                                ng-repeat="item in location"
-                                value="{{item.LocationId}}">
-                            {{item.LocationName}}
-                        </option>
-                    </select>
+                    <input type="BeneficiaryAddress" id="form-field-2" name="BeneficiaryAddress" ng-model="beneficiaryToEditData.BeneficiaryAddress" required></input>
                 </td>
             </tr>
 
@@ -133,7 +103,7 @@
 
 
             &nbsp; &nbsp; &nbsp;
-            <button class="btn" ng-click="resetEditUserForm()">
+            <button class="btn" ng-click="resetEditBeneficiaryForm()">
                 <i class="icon-undo bigger-110"></i>
                 Reset
             </button>

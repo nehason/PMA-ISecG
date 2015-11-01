@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-pills">
-                <li class="active"><a href="#/user-add">Add User <span class="badge"></span></a></li>
+                <li class="active"><a href="#/user-add">Add Volunteer <span class="badge"></span></a></li>
             </ul>
         </div>
     </div>
@@ -35,7 +35,7 @@
 
         <div class="col-md-8 col-sm-8 margin-bottom-30">
             <div class="panel panel-primary">
-                <div class="panel-heading">User Data</div>
+                <div class="panel-heading">Volunteer Data</div>
                 <div class="panel-body">
                     <table class="table table-striped">
 
@@ -47,16 +47,14 @@
                                 <th>
                                     Email
                                 </th>
-                                <th>
-                                   Role
-                                </th>
+                                
+                                
 
                                 <!-- <th>
                                      Is Active
                                  </th>-->
-                                <th>
-                                    Action
-                                </th>
+                                
+                      
 
                             </tr>
                         </thead>
@@ -64,7 +62,6 @@
                         <tr ng-repeat="i in pagedItems[currentPage]">
                             <td>{{i.UserName}}</td>
                             <td>{{i.UserEmail}}</td>
-                            <td>{{i.RoleName}}</td>
 
 
                             <td>
