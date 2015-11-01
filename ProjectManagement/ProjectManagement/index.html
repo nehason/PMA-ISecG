@@ -1,4 +1,5 @@
-﻿<head>
+﻿<!DOCTYPE html>
+<head>
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
     <title>Project Management Application</title>
@@ -7,10 +8,10 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="Content\templatemo_415_dashboard/css/templatemo_main.css">
     <link href="Content/templatemo_415_dashboard/css/bootstrap.min.css" rel="stylesheet" />
-     <link href="Content/Site.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
 </head>
 <body ng-app="app">
-     <div id="fade"></div>
+    <div id="fade"></div>
     <div id="modal">
         <img id="loader" src="Content/images/loader.gif" />
     </div>
@@ -21,13 +22,86 @@
             </div>
         </div>
     </div>
-    <div class="template-page-wrapper">
-        <div class="templatemo-content-wrapper">
-            <div class="templatemo-content">
-                <!--<div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>-->
+    <div class="template-page-wrapper" style="background-color:whitesmoke;">
+        <div class="navbar-collapse collapse templatemo-sidebar">
+            <ul class="templatemo-sidebar-menu" style="background-color:lightblue;display:none" id="SidePanel">
+                <!-- <li>
+                    <form class="navbar-form">
+                        <input type="text" class="form-control" id="templatemo_search_box" placeholder="Search...">
+                        <span class="btn btn-default">Go</span>
+                    </form>
+                </li>-->
+                <!--<li>
+                    <h4>You are logged-in as {{vm.username}} !</h4>
+                </li>-->
+                <!--<h4>You are logged-in as {{userinfo.username}} !</h4>--> 
+                <li class="active"><a href="javascript:;"><i class="fa fa-home"></i>Dashboard</a></li>
+                <li><a href="#projects"><i class="fa fa-database"></i>Projects<div class="pull-right"></div></a></li>
+                <li><a href="#users"><i class="fa fa-users"></i>Volunteers<div class="pull-right"></div></a></li>
+                <li>
+                    <a href="#beneficiaries"><i class="fa fa-users"></i>Beneficiaries<div class="pull-right"></div></a>
+                </li>
+                <li class="sub open">
+                    <a href="javascript:;">
+                        <i class="fa fa-map-marker"></i> Locations<div class="pull-right"><span class="caret"></span></div>
+                    </a>
+                    <ul class="templatemo-submenu">
+                        <li><a href="#locations">View All Locations</a></li>
+                        <li><a href="#addProjectsToLocation">Add Project To A Location</a></li>
+                    </ul>
+                </li>
+                <li class="sub open">
+                    <a href="javascript:;">
+                        <i class="fa fa-cubes"></i> Funds<div class="pull-right"><span class="caret"></span></div>
+                    </a>
+                    <ul class="templatemo-submenu">
+                        <li><a href="#funds">View All Funds</a></li>
+                        <li><a href="#fund-allocation">Expenses</a></li>
+                        <li><a href="#add-fund-allocation">Allocate Funds</a></li>
+                    </ul>
+                </li>
+                <li class="sub open">
+                    <a href="javascript:;">
+                        <i class="fa fa-cog"></i> Reports<div class="pull-right"><span class="caret"></span></div>
+                    </a>
+                    <ul class="templatemo-submenu">
+                        <li><a href="#projects-report">Projects</a></li>
+                        <li><a href="#projects-location-funds-report">Locations</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#login"><i class="fa fa-sign-out"></i>Sign Out</a></li>
+            </ul>
+        </div>
+        <!--/.navbar-collapse -->
+        <div class="templatemo-content-wrapper" style="background-color:whitesmoke;">
+            <div class="templatemo-content" style="margin-left:250px;">
                 <div ng-view></div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Are you sure you want to sign out?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="index.html" class="btn btn-primary">Yes</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="template-page-wrapper">
+            <div class="templatemo-content-wrapper">
+                <div class="templatemo-content">
+                    <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div>
+                    <div ng-view></div>
+                </div>
+            </div>-->
         <footer class="templatemo-footer">
             <div class="templatemo-copyright">
                 <p>Copyright &copy; 2015 Team Intelligo</p>
@@ -35,15 +109,14 @@
         </footer>
     </div>
 
-    <script src="Content\templatemo_415_dashboard/js/jquery.min.js"></script>
-    <script src="Content\templatemo_415_dashboard/js/bootstrap.min.js"></script>
-    <script src="Content\templatemo_415_dashboard/js/Chart.min.js"></script>
-    <script src="Content\templatemo_415_dashboard/js/templatemo_script.js"></script>
+    <script src="Content/templatemo_415_dashboard/js/jquery.min.js"></script>
+    <script src="Content/templatemo_415_dashboard/js/bootstrap.min.js"></script>
+    <script src="Content/templatemo_415_dashboard/js/templatemo_script.js"></script>
     <script src="Scripts/angular.js"></script>
-   
+
     <script src="Scripts/angular.min.js"></script>
     <script src="Scripts/angular-cookies.js"></script>
-    
+
     <script src="Scripts/angular-route.js"></script>
     <script src="UI/js/app.js"></script>
     <!--<script src="UI/js/directives.js"></script>
@@ -51,8 +124,8 @@
     <script src="UI/js/services.js"></script>-->
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
-     <script src="Scripts/bootbox.min.js"></script>
-    
+    <script src="Scripts/bootbox.min.js"></script>
+
     <script src="UI/js/flash.service.js"></script>
 
     <script type="text/javascript">
@@ -69,3 +142,4 @@
         });
     </script>
 </body>
+</html>

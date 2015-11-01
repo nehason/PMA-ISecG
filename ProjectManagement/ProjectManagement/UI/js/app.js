@@ -145,7 +145,7 @@
                             controllerAs: 'vm'
                         })
         .when('/home', {
-            templateUrl: 'UI/Templates/layout.html',
+            templateUrl: 'UI/Templates/home.view.html',
             controller: 'HomeController',
             controllerAs: 'vm'
         })
@@ -157,6 +157,8 @@
         var vm = this;
         vm.login = login;
         // vm.user = $rootScope.globals.currentUser.username;
+        document.getElementById('SidePanel').style.display = 'none';
+
         function login() {
             ShowLoading();
             $http({
@@ -164,10 +166,8 @@
                 url: 'api/authenticate',
                 data: vm
             }).success(function (result, status, headers) {
-                HideLoading();
-                $rootScope.username = vm.username;
-               
                 $location.path('/home');
+                HideLoading();
 
             }).error(function (result, status, headers) {
                 HideLoading();
@@ -179,6 +179,7 @@
     RegisterController.$inject = ['$location', '$rootScope', '$http'];
     function RegisterController($location, $rootScope, $http) {
         var vm = this;
+        document.getElementById('SidePanel').style.display = 'none';
         //vm.user = $rootScope.globals.currentUser.username;
         vm.register = register;
 
@@ -209,8 +210,20 @@
     HomeController.$inject = ['$rootScope'];
     function HomeController($rootScope) {
         var vm = this;
-   
+        document.getElementById('SidePanel').style.display = 'block';
+
     }
+
+    ProjectController.$inject = ['$scope', '$http', '$filter', '$location'];
+    function ProjectController($scope, $http, $filter, $location) {
+
+        $http({ method: 'GET', url: '/api/project' }).
+		success(function (response, status, headers, config) {
+		    $scope.projects = response;
+		}).error(function (data, status, headers, config) {
+		    bootbox.alert('error');
+		});
+    };
 
     ProjectController.$inject = ['$scope', '$http', '$filter', '$location'];
     function ProjectController($scope, $http, $filter, $location) {
